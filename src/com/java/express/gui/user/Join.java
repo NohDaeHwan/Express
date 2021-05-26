@@ -118,7 +118,7 @@ public class Join extends CustomUILogin {
 			public void actionPerformed(ActionEvent e) {
 				String consent = "[필수] 개인정보 수집 및 이용 동의\r\n" + "\r\n" + "아래의 목적으로 개인정보를 수집 및 이용합니다\r\n" + "\r\n"
 						+ "1. 목적 : 개인 식별, 프로그램 기능 사용\r\n" + "2. 항목 : 아이디, 휴대폰 번호, 생년월일\r\n"
-						+ "3. 보유 기간 : 회원 탈퇴 후 3개월까지 보유\r\n" + "4. 개인정보의 수집 및 이용에 대한 동의를 거부할 수 있으나, 기능 사용이 제한됩니다.";
+						+ "3. 개인정보의 수집 및 이용에 대한 동의를 거부할 수 있으나, 기능 사용이 제한됩니다.";
 				int result = JOptionPane.showConfirmDialog(null, consent, "개인정보 이용약관", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {

@@ -43,15 +43,20 @@ public class Main extends CustomUIMain {
 	private JComboBox<String> cbBDepartTime, cbBDepart, cbBArrive, cbBRating; 
 	private JButton btnBookSearch, btnBookDelete;
 
-	public Main() {
+	public Main() {	
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
+		busTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+		busTable.getColumnModel().getColumn(9).setPreferredWidth(180);
 		
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				homePanel.setVisible(true);
 				userPanel.setVisible(false);
 				bookPanel.setVisible(false);
+				
+				busTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+				busTable.getColumnModel().getColumn(9).setPreferredWidth(180);
 			}
 		});
 		
@@ -60,6 +65,9 @@ public class Main extends CustomUIMain {
 				homePanel.setVisible(false);
 				userPanel.setVisible(true);
 				bookPanel.setVisible(false);
+				
+				userTable.getColumnModel().getColumn(5).setPreferredWidth(150);
+				userTable.getColumnModel().getColumn(7).setPreferredWidth(150);
 			}
 		});
 		
@@ -68,6 +76,10 @@ public class Main extends CustomUIMain {
 				homePanel.setVisible(false);
 				userPanel.setVisible(false);
 				bookPanel.setVisible(true);
+				
+				bookTable.getColumnModel().getColumn(3).setPreferredWidth(200);
+				bookTable.getColumnModel().getColumn(10).setPreferredWidth(100);
+				bookTable.getColumnModel().getColumn(1).setPreferredWidth(100);
 			}
 		});
 		
@@ -138,7 +150,7 @@ public class Main extends CustomUIMain {
 						}
 						new BusUpdate(data);
 					} else {
-						int select = JOptionPane.showConfirmDialog(frame, "이미 예매된 버스입니다~!! 삭제하시겠습니까?", "삭제확인", JOptionPane.YES_NO_OPTION);
+						int select = JOptionPane.showConfirmDialog(frame, "이미 예매된 버스입니다~!! 수정하시겠습니까?", "삭제확인", JOptionPane.YES_NO_OPTION);
 						if (select == JOptionPane.YES_OPTION) {
 							ArrayList<String> data = new ArrayList<String>();			
 							int column = busTable.getColumnCount();
