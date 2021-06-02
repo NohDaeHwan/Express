@@ -40,7 +40,7 @@ public class Main extends CustomUIMain {
 	private JTable busTable, userTable, bookTable;
 	
 	private JTextField txtBUserId, txtBCompany, txtBDepartDate, txtBSeat, txtBPrice;
-	private JComboBox<String> cbBDepartTime, cbBDepart, cbBArrive, cbBRating; 
+	private JComboBox<String> cbBDepartTime, cbBDepart, cbBArrive, cbBRating, cbReserveState; 
 	private JButton btnBookSearch, btnBookDelete;
 
 	public Main() {	
@@ -291,7 +291,7 @@ public class Main extends CustomUIMain {
 				ReserveDao dao = new ReserveDao();
 				dtos = dao.userReservesSearch(txtBUserId.getText(), txtBCompany.getText(), txtBDepartDate.getText(), cbBDepartTime.getSelectedItem().toString(),
 						cbBDepart.getSelectedItem().toString(), cbBArrive.getSelectedItem().toString(), cbBRating.getSelectedItem().toString(),
-						txtBSeat.getText(), txtBPrice.getText());
+						txtBSeat.getText(), txtBPrice.getText(), cbReserveState.getSelectedItem().toString());
 				DefaultTableModel model = (DefaultTableModel) bookTable.getModel();
 				if (dtos.size() != 0) {
 					model.getDataVector().removeAllElements();
@@ -312,12 +312,12 @@ public class Main extends CustomUIMain {
 			@Override
 			public void actionPerformed(ActionEvent e) {		
 				if (bookTable.getSelectedRow() < bookTable.getRowCount() && bookTable.getSelectedRow() > -1) {
-					int select = JOptionPane.showConfirmDialog(frame, "예매 정보를 삭제하시겠습니까?", "삭제확인", JOptionPane.YES_NO_OPTION);
+					int select = JOptionPane.showConfirmDialog(frame, "예매를 취소하시겠습니까?", "취소확인", JOptionPane.YES_NO_OPTION);
 					if (select == JOptionPane.YES_OPTION) {
 						DefaultTableModel model = (DefaultTableModel) bookTable.getModel();
 						ReserveDao reserveDao = new ReserveDao();
 						int row = bookTable.getSelectedRow();
-						String reserveId = bookTable.getValueAt(row, 0).toString();
+						String reserveId = model.getValueAt(row, 0).toString();
 						int result = reserveDao.reserveDelete(reserveId);
 						if (result == 1) {
 							UserDao dao = new UserDao();
@@ -326,8 +326,8 @@ public class Main extends CustomUIMain {
 							String[] date = bookTable.getValueAt(row, 3).toString().split(" ");
 							busDao.busSeatUpdate(date[0], date[1], bookTable.getValueAt(row, 4).toString(), bookTable.getValueAt(row, 5).toString(), 
 									bookTable.getValueAt(row, 6).toString(), bookTable.getValueAt(row, 7).toString(), Integer.parseInt(bookTable.getValueAt(row, 8).toString()));
-							JOptionPane.showMessageDialog(frame, "예매 정보를 삭제했습니다", "삭제성공", JOptionPane.INFORMATION_MESSAGE);
-							model.removeRow(bookTable.getSelectedRow());
+							JOptionPane.showMessageDialog(frame, "예매를 취소했습니다", "취소성공", JOptionPane.INFORMATION_MESSAGE);
+							bookTable.setValueAt("예매취소", row, 2);
 						} else {
 							JOptionPane.showMessageDialog(frame, "예매 정보 삭제에 실패했습니다", "오류", JOptionPane.ERROR_MESSAGE);
 						}
@@ -422,6 +422,7 @@ public class Main extends CustomUIMain {
 		
 		// 예매정보 UI
 		String[] bookHeader = { "예매번호", "아이디", "예매상태", "출발일시", "출발지", "도착지", "회사", "등급", "매수", "가격", "좌석번호" };
+		String[] rserveState = {"", "예매완료", "예매취소"};
 		
 		custom.setLbImg("lbLogo", bookPanel, 1, 425, 100);
 		custom.setLb("lbUserId", "아이디", bookPanel, 100, 245, 100, 20, 22);
@@ -433,6 +434,7 @@ public class Main extends CustomUIMain {
 		custom.setLb("lbRating", "등급", bookPanel, 485, 305, 100, 20, 22);
 		custom.setLb("lbSeat", "좌석번호", bookPanel, 445, 365, 100, 20, 22);
 		custom.setLb("lbPrice", "가격", bookPanel, 485, 425, 100, 20, 22);
+		custom.setLb("lbPrice", "예매상태", bookPanel, 445, 485, 100, 20, 22);
 		
 		btnBookSearch = custom.setBtnBlack("btnBookSearch", "조회", bookPanel, 300, 600, 350, 45);
 		btnBookDelete = custom.setBtnWhite("btnBookDelete", "삭제", bookPanel, 900, 700, 200, 45, "PLAIN");
@@ -446,6 +448,7 @@ public class Main extends CustomUIMain {
 		cbBRating = custom.setCombo("cbRating", rating, bookPanel, 555, 300, 240, 30);
 		txtBSeat = custom.setTextField("txtSeat", true, bookPanel, 555, 360, 240, 30);   
 		txtBPrice = custom.setTextField("txtPrice", true, bookPanel, 555, 420, 240, 30);
+		cbReserveState = custom.setCombo("cbReserveState", rserveState, bookPanel, 555, 480, 240, 30);
 		
 		lbBookCalendar = custom.setlbImg("lbBookCalendar", bookPanel, 410, 355);
 		bookTable = custom.setTable("bookTable", bookPanel, bookHeader, 900, 80, 700, 600);

@@ -50,7 +50,7 @@ public class ReserveDao {
 		ResultSet rs = null;
 		ArrayList<ReSearchReqDto> dtos = new ArrayList<ReSearchReqDto>();
 		String sql = "SELECT b.id, u.departDate, u.departTime, u.company, u.depart, u.arrive, u.rating, b.buying, b.price, b.reserveState, b.seat "
-				+ "FROM book b inner join bustime u on b.busId = u.id WHERE userId = ?";		
+				+ "FROM book b inner join bustime u on b.busId = u.id WHERE userId = ? ORDER BY id";		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userId);
@@ -86,7 +86,7 @@ public class ReserveDao {
 	}
 	
 	// Admin 예매내역 조회
-	public ArrayList<ReservesReqDto> userReservesSearch(String userId, String company, String departDate, String departTime, String depart, String arrive, String rating, String seat, String price) {		
+	public ArrayList<ReservesReqDto> userReservesSearch(String userId, String company, String departDate, String departTime, String depart, String arrive, String rating, String seat, String price, String reserveState) {		
 		Connection conn = DBConnection.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -94,7 +94,7 @@ public class ReserveDao {
 		String sql = "SELECT b.id, s.userId, b.reserveState, u.departDate, u.departTime, u.depart, u.arrive, u.company, u.rating, b.buying, b.price, b.seat "
 				+ "FROM book b inner join bustime u on b.busId = u.id inner join user s on b.userId = s.id "
 				+ "WHERE s.userId LIKE ? AND u.company LIKE ? AND u.departDate LIKE ? AND u.departTime LIKE ? "
-				+ "AND u.depart LIKE ? AND u.arrive LIKE ? AND u.rating LIKE ? AND b.seat LIKE ? AND b.price LIKE ?";	
+				+ "AND u.depart LIKE ? AND u.arrive LIKE ? AND u.rating LIKE ? AND b.seat LIKE ? AND b.price LIKE ? AND b.reserveState LIKE ?";	
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%"+userId+"%");
@@ -106,6 +106,7 @@ public class ReserveDao {
 			pstmt.setString(7, "%"+rating+"%");
 			pstmt.setString(8, "%"+seat+"%");
 			pstmt.setString(9, "%"+price+"%");
+			pstmt.setString(10, "%"+reserveState+"%");
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				ReservesReqDto dto = new ReservesReqDto();
@@ -143,10 +144,11 @@ public class ReserveDao {
 		Connection conn = DBConnection.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT seat FROM book WHERE busId = ?";		
+		String sql = "SELECT seat FROM book WHERE busId = ? AND reserveState = ?";		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, busId);
+			pstmt.setString(2, "예매완료");
 			rs = pstmt.executeQuery();
 			String seat = "";
 			if (rs.next()) {
@@ -174,10 +176,11 @@ public class ReserveDao {
 	public int reserveDelete(String reserveId) {
 		Connection conn = DBConnection.getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "DELETE FROM book WHERE id = ?";
+		String sql = "UPDATE book SET reserveState = ? WHERE id = ?";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, reserveId);
+			pstmt.setString(1, "예매취소");
+			pstmt.setString(2, reserveId);
 
 			int result = pstmt.executeUpdate();
 			return result;

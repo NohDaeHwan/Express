@@ -227,11 +227,12 @@ public class Main extends CustomUIMain {
 					}
 				});
 				
+				// 예매 취소
 				btnBookCancel.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if (bookSearchTable.getSelectedRow() < bookSearchTable.getRowCount() && bookSearchTable.getSelectedRow() > -1) {
-							int select = JOptionPane.showConfirmDialog(frame, "예매 정보를 삭제하시겠습니까?", "삭제확인", JOptionPane.YES_NO_OPTION);
+							int select = JOptionPane.showConfirmDialog(frame, "예매를 취소하시겠습니까?", "취소확인", JOptionPane.YES_NO_OPTION);
 							if (select == JOptionPane.YES_OPTION) {
 								DefaultTableModel model = (DefaultTableModel) bookSearchTable.getModel();
 								ReserveDao reserveDao = new ReserveDao();
@@ -245,8 +246,8 @@ public class Main extends CustomUIMain {
 									String[] date = bookSearchTable.getValueAt(row, 1).toString().split(" ");
 									busDao.busSeatUpdate(date[0], date[1], bookSearchTable.getValueAt(row, 3).toString(), bookSearchTable.getValueAt(row, 4).toString(), 
 											bookSearchTable.getValueAt(row, 2).toString(), bookSearchTable.getValueAt(row, 5).toString(), Integer.parseInt(bookSearchTable.getValueAt(row, 6).toString()));
-									JOptionPane.showMessageDialog(frame, "예매 정보를 삭제했습니다", "삭제성공", JOptionPane.INFORMATION_MESSAGE);
-									model.removeRow(bookSearchTable.getSelectedRow());
+									JOptionPane.showMessageDialog(frame, "예매를 취소했습니다", "취소성공", JOptionPane.INFORMATION_MESSAGE);
+									model.setValueAt("예매취소", row, 8);
 								} else {
 									JOptionPane.showMessageDialog(frame, "예매 정보 삭제에 실패했습니다", "오류", JOptionPane.ERROR_MESSAGE);
 								}

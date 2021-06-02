@@ -192,7 +192,7 @@ public class BusDao {
 		return null;
 	}
 	
-	// 예매시 잔여좌석 업데이트하기
+	// 예매시 남은 좌석 감소
 	public int busSeatUpdate(int id, int seat) {
 		Connection conn = DBConnection.getConnection();
 		PreparedStatement pstmt = null;
@@ -217,7 +217,7 @@ public class BusDao {
 		return -1;
 	}
 	
-	
+	// 예매 취소시 남은 좌석수 증가
 	public int busSeatUpdate(String date, String time, String depart, String arrive, String company, String rating, int buying) {
 		Connection conn = DBConnection.getConnection();
 		PreparedStatement pstmt = null;
